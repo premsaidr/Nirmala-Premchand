@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ★ Open Graph / 카카오톡 링크 카드 (이미지 없음 — 텍스트 카드) ★ -->
+<meta property="og:type"         content="website">
+<meta property="og:url"          content="https://YOUR_USERNAME.github.io/YOUR_REPO/">
+<meta property="og:title"        content="겐지스강의 불꽃 — 니르말라의 이야기">
+<meta property="og:description"  content="전국 87등, 불가촉천민이라는 이유로 대학에서 쫓겨난 19살 소녀. 한글과 코드로 3000년 카스트의 굴레를 끊어낸 니르말라의 가슴 뜨거운 실화 인포그래픽.">
+<meta property="og:locale"       content="ko_KR">
+<meta property="og:site_name"    content="겐지스강의 불꽃">
+<meta name="description"         content="전국 87등, 불가촉천민이라는 이유로 대학에서 쫓겨난 19살 소녀. 한글과 코드로 3000년 카스트의 굴레를 끊어낸 니르말라의 가슴 뜨거운 실화 인포그래픽.">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="겐지스강의 불꽃 — 니르말라의 이야기">
+<meta name="twitter:description" content="전국 87등이지만 카스트 때문에 입학 취소. 한글과 코드로 인도를 바꾼 니르말라의 실화.">
+
+<title>겐지스강의 불꽃 — 니르말라의 이야기</title>
+
+<!-- 구글 폰트 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== CSS 변수 / 컬러 스킴 ===== */
+:root {
+  --burg:    #593C47;
+  --yellow:  #F2E63D;
+  --gold:    #F2C53D;
+  --orange:  #F25C05;
+  --red:     #F24405;
+  --cream:   #FFF8F0;
+  --ash:     #F5EDE8;
+  --slate:   #475569;
+  --dark:    #1A0F14;
+  --white:   #FFFFFF;
+
+  --shadow-sm: 0 2px 12px rgba(89,60,71,.10);
+  --shadow-md: 0 6px 28px rgba(89,60,71,.15);
+  --shadow-lg: 0 16px 48px rgba(89,60,71,.22);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+}
+
+/* ===== 리셋 & 기본 ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  overflow-x: hidden;
+  font-size: clamp(18px, 1.6vw, 20px);
+  line-height: 1.7;
+}
+
+/* ===== 배경 장식 ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 20%, rgba(242,92,5,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(89,60,71,.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== 레이아웃 래퍼 ===== */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
+}
+
+/* ===== 애니메이션 키프레임 ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes flicker {
+  0%,100% { opacity: 1; transform: scaleY(1) translateX(0); }
+  25%      { opacity: .8; transform: scaleY(1.08) translateX(-1px); }
+  50%      { opacity: .95; transform: scaleY(.95) translateX(1px); }
+  75%      { opacity: .85; transform: scaleY(1.04) translateX(-1px); }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes slideRight {
+  from { width: 0; }
+  to   { width: var(--bar-w); }
+}
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+
+/* 스크롤 진입 애니메이션 */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 헤더 ===== */
+.site-header {
+  padding: clamp(24px, 4vw, 48px) 0 clamp(20px, 3vw, 36px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  animation: fadeUp .8s ease both;
+}
+.header-left { flex: 1; }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 5px 14px;
+  border-radius: 50px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.site-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(32px, 5vw, 62px);
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--burg) 0%, var(--orange) 60%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.site-subtitle {
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--slate);
+  margin-top: 10px;
+  font-weight: 300;
+}
+.header-right {
+  text-align: right;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: var(--slate);
+  padding-top: 8px;
+}
+.header-right strong { display: block; color: var(--burg); font-weight: 700; }
+
+/* ===== 히어로 배너 ===== */
+.hero-banner {
+  background: linear-gradient(135deg, var(--burg) 0%, #3D1F2E 100%);
+  border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 56px) clamp(24px, 5vw, 56px);
+  margin-bottom: clamp(24px, 4vw, 48px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp .9s ease .1s both;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(ellipse, rgba(242,196,61,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+}
+.hero-text {}
+.hero-kicker {
+  font-size: 15px;
+  color: var(--gold);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.hero-heading {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(22px, 3.5vw, 42px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 18px;
+}
+.hero-heading em {
+  color: var(--yellow);
+  font-style: normal;
+  display: inline-block;
+  position: relative;
+}
+.hero-heading em::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 3px;
+  background: var(--yellow);
+  border-radius: 2px;
+}
+.hero-desc {
+  font-size: clamp(18px, 1.8vw, 21px);
+  color: rgba(255,255,255,.82);
+  line-height: 1.75;
+  max-width: 600px;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.badge {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  backdrop-filter: blur(8px);
+  font-weight: 500;
+}
+.badge.accent { background: var(--orange); border-color: var(--orange); }
+
+/* 히어로 일러스트 (SVG 컨테이너) */
+.hero-illust {
+  width: clamp(160px, 22vw, 280px);
+  flex-shrink: 0;
+}
+
+/* ===== 섹션 헤더 ===== */
+.section-hd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+.section-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--burg);
+}
+
+/* ===== 3열 그리드 ===== */
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2.5vw, 28px);
+  margin-bottom: clamp(24px, 4vw, 48px);
+}
+.grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 2.5vw, 28px);
+  margin-bottom: clamp(24px, 4vw, 48px);
+}
+
+/* ===== 카드 ===== */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: clamp(20px, 3vw, 32px);
+  box-shadow: var(--shadow-sm);
+  transition: transform .3s ease, box-shadow .3s ease;
+  overflow: hidden;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+.card-burg  { background: var(--burg); color: #fff; }
+.card-dark  { background: var(--dark); color: #fff; }
+.card-gold  { background: linear-gradient(135deg, var(--gold), var(--orange)); color: #fff; }
+.card-glass {
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(89,60,71,.1);
+}
+
+.card-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .ico { font-size: 24px; }
+.card-body { font-size: clamp(18px, 1.5vw, 19px); line-height: 1.75; }
+
+/* 숫자 스탯 카드 */
+.stat-number {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 15px;
+  opacity: .75;
+  font-weight: 500;
+}
+.stat-desc {
+  font-size: clamp(18px, 1.4vw, 19px);
+  margin-top: 10px;
+  opacity: .88;
+  line-height: 1.6;
+}
+
+/* ===== 타임라인 ===== */
+.timeline {
+  position: relative;
+  padding-left: clamp(28px, 5vw, 56px);
+  margin-bottom: clamp(24px, 4vw, 48px);
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: clamp(10px, 2vw, 20px);
+  top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--orange), var(--burg), var(--gold));
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * clamp(28px, 5vw, 56px) + clamp(10px, 2vw, 20px) - 9px);
+  top: 6px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 3px solid var(--cream);
+  box-shadow: 0 0 0 2px var(--orange);
+  z-index: 1;
+  transition: transform .3s ease;
+}
+.tl-item:hover::before { transform: scale(1.3); }
+.tl-year {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+.tl-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--burg);
+  margin-bottom: 6px;
+}
+.tl-body {
+  font-size: clamp(18px, 1.5vw, 19px);
+  color: var(--slate);
+  line-height: 1.7;
+}
+
+/* ===== 인용구 ===== */
+.quote-block {
+  position: relative;
+  background: var(--burg);
+  border-radius: var(--radius-md);
+  padding: clamp(24px, 4vw, 40px) clamp(24px, 4vw, 48px);
+  margin-bottom: clamp(24px, 4vw, 48px);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.quote-block::before {
+  content: '"';
+  position: absolute;
+  top: -10px; left: 16px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 120px;
+  color: rgba(242,196,61,.2);
+  line-height: 1;
+  pointer-events: none;
+}
+.quote-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 700;
+  color: var(--yellow);
+  line-height: 1.55;
+  position: relative;
+  z-index: 1;
+}
+.quote-source {
+  font-size: 15px;
+  color: rgba(255,255,255,.65);
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 마커 강조 ===== */
+.mark-yellow {
+  background: linear-gradient(180deg, transparent 50%, var(--yellow) 50%);
+  font-weight: 700;
+}
+.mark-orange {
+  background: linear-gradient(180deg, transparent 50%, rgba(242,92,5,.3) 50%);
+  font-weight: 700;
+}
+.underline-burg {
+  border-bottom: 3px solid var(--burg);
+  padding-bottom: 2px;
+  font-weight: 700;
+}
+
+/* ===== 차트 컨테이너 ===== */
+.chart-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: clamp(20px, 3vw, 32px);
+  box-shadow: var(--shadow-sm);
+  overflow: visible;
+  min-width: unset;
+  width: 100%;
+}
+.chart-card:hover { box-shadow: var(--shadow-md); }
+.svg-container {
+  width: 100%;
+  min-width: unset;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== 카스트 비교표 ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: clamp(18px, 1.4vw, 19px);
+}
+.compare-table th {
+  background: var(--burg);
+  color: #fff;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  padding: 14px 18px;
+  text-align: left;
+}
+.compare-table th:first-child { border-radius: 12px 0 0 0; }
+.compare-table th:last-child  { border-radius: 0 12px 0 0; }
+.compare-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(89,60,71,.08);
+  vertical-align: top;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: var(--ash); }
+.compare-table .bad  { color: var(--red); font-weight: 700; }
+.compare-table .good { color: #2E7D32; font-weight: 700; }
+
+/* ===== 헌정사 박스 ===== */
+.dedication {
+  background: linear-gradient(135deg, var(--dark) 0%, #2E1520 100%);
+  border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 56px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: clamp(24px, 4vw, 48px);
+  box-shadow: var(--shadow-lg);
+}
+.dedication::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 0%, rgba(242,92,5,.15), transparent 70%);
+  pointer-events: none;
+}
+.ded-emoji { font-size: 48px; display: block; margin-bottom: 16px; }
+.ded-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 16px;
+  position: relative;
+}
+.ded-text {
+  font-size: clamp(18px, 1.8vw, 21px);
+  color: rgba(255,255,255,.82);
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+}
+.ded-text strong { color: var(--yellow); }
+
+/* ===== 푸터 ===== */
+.site-footer {
+  background: var(--burg);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: clamp(24px, 4vw, 40px) clamp(24px, 5vw, 48px);
+  margin-top: clamp(32px, 5vw, 56px);
+  color: rgba(255,255,255,.75);
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 8px;
+}
+.footer-note { font-size: 15px; line-height: 1.7; }
+.footer-tag {
+  font-size: 15px;
+  background: rgba(255,255,255,.1);
+  padding: 4px 12px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+/* ===== 손그림 요소 (SVG 스타일) ===== */
+.hand-arrow { display: inline-block; animation: float 3s ease-in-out infinite; }
+.hand-star  { display: inline-block; animation: pulse 2s ease-in-out infinite; }
+
+/* ===== 반응형 ===== */
+@media (max-width: 1024px) {
+  .grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .hero-illust {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .grid-3col,
+  .grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .chart-card { min-width: unset; width: 100%; }
+  .svg-container { min-width: unset; }
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header-right { text-align: left; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-illust { display: none; }
+  .footer-inner { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 페이지 래퍼 ===== -->
+<div class="page-wrap">
+
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header">
+    <div class="header-left">
+      <div class="eyebrow">🔥 실화 인포그래픽</div>
+      <h1 class="site-title">겐지스강의 불꽃</h1>
+      <p class="site-subtitle">니르말라 — 카스트를 깨뜨린 한글과 코드의 이야기</p>
+    </div>
+    <div class="header-right">
+      <strong>출처: 유튜브 다큐멘터리</strong>
+      그래픽 레코딩 인포그래픽<br>
+      #한글 #카스트 #IT #달리트
+    </div>
+  </header>
+
+  <!-- ===== 히어로 배너 ===== -->
+  <section class="hero-banner reveal">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-kicker">🇮🇳 바라나시 → 🇰🇷 판교</p>
+        <h2 class="hero-heading">
+          전국 <em>87등</em>이지만<br>
+          '돔 카스트'라는 이유로<br>
+          입학이 취소된 소녀
+        </h2>
+        <p class="hero-desc">
+          겐지스강 화장터에서 60년을 일한 할아버지(바부지)가
+          염소 15마리·할머니 금목걸이·집까지 팔아 손녀를 한국으로 보냈다.
+          한글과 코드로 3000년 카스트의 굴레를 끊어낸 진짜 이야기.
+        </p>
+        <div class="hero-badges">
+          <span class="badge accent">🏆 IIT-JEE 전국 87등</span>
+          <span class="badge">달리트 여성 역대 최고점</span>
+          <span class="badge">3000명 중 25명 합격</span>
+          <span class="badge">여성 합격 단 1명</span>
+        </div>
+      </div>
+
+      <!-- 불꽃 SVG 일러스트 -->
+      <div class="hero-illust">
+        <svg viewBox="0 0 260 380" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">
+          <!-- 달 배경 -->
+          <circle cx="130" cy="80" r="65" fill="rgba(242,196,61,.12)"/>
+          <!-- 겐지스강 물결 -->
+          <path d="M10 320 Q65 300 130 318 Q195 336 250 315" stroke="#4FC3F7" stroke-width="3" fill="none" opacity=".7"/>
+          <path d="M10 332 Q65 314 130 330 Q195 348 250 328" stroke="#4FC3F7" stroke-width="2" fill="none" opacity=".4"/>
+          <!-- 화장터 계단 -->
+          <rect x="60" y="270" width="140" height="50" rx="4" fill="#8D6E63" opacity=".8"/>
+          <rect x="70" y="255" width="120" height="20" rx="3" fill="#A1887F" opacity=".8"/>
+          <rect x="80" y="242" width="100" height="18" rx="3" fill="#BCAAA4" opacity=".8"/>
+          <!-- 장작 -->
+          <rect x="90" y="230" width="80" height="12" rx="3" fill="#5D4037"/>
+          <rect x="95" y="222" width="70" height="10" rx="3" fill="#6D4C41"/>
+          <!-- 불꽃 메인 -->
+          <g style="transform-origin:130px 230px">
+            <path d="M130 230 C118 200 105 185 115 165 C120 155 128 150 130 135
+                     C132 150 140 155 145 165 C155 185 142 200 130 230Z"
+                  fill="url(#flameGrad1)"
+                  style="animation: flicker 1.8s ease-in-out infinite;"/>
+            <path d="M130 225 C122 205 112 195 118 178 C122 170 128 165 130 152
+                     C132 165 138 170 142 178 C148 195 138 205 130 225Z"
+                  fill="url(#flameGrad2)"
+                  style="animation: flicker 1.4s ease-in-out infinite .2s;"/>
+            <path d="M130 218 C125 204 118 197 122 185 C125 178 128 174 130 165
+                     C132 174 135 178 138 185 C142 197 135 204 130 218Z"
+                  fill="#FFF176" opacity=".9"
+                  style="animation: flicker 1.1s ease-in-out infinite .4s;"/>
+          </g>
+          <!-- 여자 실루엣 (앉아서 공부) -->
+          <g transform="translate(85, 172)">
+            <!-- 머리 -->
+            <circle cx="45" cy="14" r="12" fill="var(--burg)"/>
+            <!-- 머리카락 -->
+            <path d="M35 12 Q33 4 40 3 Q45 1 50 3 Q57 4 55 12" fill="#2D1A22"/>
+            <!-- 몸통 -->
+            <path d="M35 26 Q30 42 32 55 Q38 60 45 60 Q52 60 58 55 Q60 42 55 26 Q50 22 45 22 Q40 22 35 26Z"
+                  fill="#7B3F5E"/>
+            <!-- 팔 + 책 -->
+            <path d="M32 30 Q18 35 15 45 Q20 50 28 48 Q30 40 35 35Z" fill="#7B3F5E"/>
+            <path d="M58 30 Q72 35 75 45 Q70 50 62 48 Q60 40 55 35Z" fill="#7B3F5E"/>
+            <!-- 노트/책 -->
+            <rect x="18" y="44" width="54" height="38" rx="4" fill="#FFF9C4"/>
+            <line x1="45" y1="44" x2="45" y2="82" stroke="#ddd" stroke-width="1.5"/>
+            <!-- 펜으로 쓰는 선 -->
+            <path d="M52 52 L68 52 M52 60 L68 60 M52 68 L68 68" stroke="#593C47" stroke-width="1.5"/>
+            <!-- 한글 ㄱ ㄴ ㄷ -->
+            <text x="22" y="64" font-size="12" fill="var(--orange)" font-weight="bold" font-family="Noto Sans KR">가나다</text>
+          </g>
+          <!-- 별 -->
+          <text x="30" y="60" font-size="18" fill="var(--gold)" style="animation: popIn 2s ease infinite alternate;">★</text>
+          <text x="205" y="75" font-size="14" fill="var(--yellow)" style="animation: popIn 2.5s ease infinite alternate .5s;">✦</text>
+          <text x="195" y="140" font-size="20" fill="rgba(242,230,61,.6)" style="animation: popIn 1.8s ease infinite alternate 1s;">☆</text>
+          <!-- 태극기 소형 -->
+          <g transform="translate(195, 45)">
+            <rect x="0" y="0" width="36" height="24" rx="3" fill="white" stroke="#ddd" stroke-width="1"/>
+            <circle cx="18" cy="12" r="7" fill="none" stroke="#C00" stroke-width="2.5"/>
+            <path d="M18 5 A7 7 0 0 1 18 12" fill="#C00"/>
+            <path d="M18 19 A7 7 0 0 1 18 12" fill="#003DA5"/>
+          </g>
+          <!-- 그라데이션 정의 -->
+          <defs>
+            <linearGradient id="flameGrad1" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%"   stop-color="var(--red)"/>
+              <stop offset="50%"  stop-color="var(--orange)"/>
+              <stop offset="100%" stop-color="var(--gold)"/>
+            </linearGradient>
+            <linearGradient id="flameGrad2" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%"   stop-color="var(--orange)"/>
+              <stop offset="60%"  stop-color="var(--yellow)"/>
+              <stop offset="100%" stop-color="#fff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 핵심 숫자 통계 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(242,92,5,.12);">📊</div>
+      <h2 class="section-title">숫자로 보는 니르말라의 여정</h2>
+    </div>
+    <div class="grid-3col">
+      <div class="card card-burg reveal">
+        <div class="stat-number" style="color:var(--yellow);">87<span style="font-size:.5em;">등</span></div>
+        <div class="stat-label">전국 IIT-JEE 성적</div>
+        <div class="stat-desc">달리트 여성 역대 최고 성적. 상위 0.01%, 3만 명 중 87등. 그러나 입학은 취소됐다.</div>
+      </div>
+      <div class="card card-gold reveal" style="transition-delay:.1s">
+        <div class="stat-number" style="color:var(--dark);">3,000<span style="font-size:.4em;">명 중</span></div>
+        <div class="stat-label">최종 합격 25명</div>
+        <div class="stat-desc">한국 IT 기업 글로벌 채용. 여성 합격자는 단 <strong>1명</strong>. 그게 니르말라였다.</div>
+      </div>
+      <div class="card reveal" style="transition-delay:.2s; background:var(--dark); color:#fff;">
+        <div class="stat-number" style="color:var(--orange);">100<span style="font-size:.4em;">만+</span></div>
+        <div class="stat-label">앱 다운로드 (6개월)</div>
+        <div class="stat-desc">니르말라가 만든 인도 모바일 결제 앱. 바라나시 차 가게 주인도 이 앱을 쓴다.</div>
+      </div>
+    </div>
+    <div class="grid-3col">
+      <div class="card card-glass reveal" style="transition-delay:.1s">
+        <div class="stat-number" style="color:var(--burg);">염소<span style="font-size:.5em;"> 15마리</span></div>
+        <div class="stat-label">바부지의 전 재산</div>
+        <div class="stat-desc">60년간 키운 염소·할머니 금목걸이·집 담보 대출. 그 전부가 손녀 한 명을 위해 쓰였다.</div>
+      </div>
+      <div class="card reveal" style="transition-delay:.2s; border-left: 5px solid var(--orange);">
+        <div class="stat-number" style="color:var(--orange);">6개월</div>
+        <div class="stat-label">새벽 3시 → 한국어 마스터</div>
+        <div class="stat-desc">하루 16시간. 차 가게 앞 시멘트 바닥에 앉아 깨진 스마트폰으로 공부했다.</div>
+      </div>
+      <div class="card card-glass reveal" style="transition-delay:.3s">
+        <div class="stat-number" style="color:var(--burg);">100<span style="font-size:.5em;">명</span></div>
+        <div class="stat-label">니르말라 코드 아카데미</div>
+        <div class="stat-desc">재단 5년 만에 100명의 달리트 소녀가 한국에서 새 삶을 시작했다.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 바부지의 희생 차트 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(89,60,71,.12);">💸</div>
+      <h2 class="section-title">바부지가 바친 것들</h2>
+    </div>
+    <div class="grid-2col">
+      <!-- 가로 바 차트 -->
+      <div class="chart-card reveal">
+        <div class="card-title"><span class="ico">📦</span> 60년 전 재산의 흐름</div>
+        <div class="svg-container">
+          <svg viewBox="0 0 560 300" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;" id="barChart">
+            <!-- 배경 격자 -->
+            <line x1="160" y1="20" x2="160" y2="260" stroke="#eee" stroke-width="1"/>
+            <line x1="260" y1="20" x2="260" y2="260" stroke="#eee" stroke-width="1"/>
+            <line x1="360" y1="20" x2="360" y2="260" stroke="#eee" stroke-width="1"/>
+            <line x1="460" y1="20" x2="460" y2="260" stroke="#eee" stroke-width="1"/>
+            <!-- 라벨 -->
+            <text x="10" y="64"  font-size="18" fill="#593C47" font-family="Noto Sans KR" font-weight="700">염소 15마리</text>
+            <text x="10" y="114" font-size="18" fill="#593C47" font-family="Noto Sans KR" font-weight="700">할머니 금목걸이</text>
+            <text x="10" y="164" font-size="18" fill="#593C47" font-family="Noto Sans KR" font-weight="700">집 담보 대출</text>
+            <text x="10" y="214" font-size="18" fill="#593C47" font-family="Noto Sans KR" font-weight="700">60년 노동</text>
+            <!-- 바 -->
+            <rect x="160" y="44" height="28" rx="6" fill="url(#barGrad1)" class="bar" data-w="200" width="0"/>
+            <rect x="160" y="94" height="28" rx="6" fill="url(#barGrad2)" class="bar" data-w="280" width="0"/>
+            <rect x="160" y="144" height="28" rx="6" fill="url(#barGrad3)" class="bar" data-w="340" width="0"/>
+            <rect x="160" y="194" height="28" rx="6" fill="url(#barGrad4)" class="bar" data-w="380" width="0"/>
+            <!-- 값 텍스트 -->
+            <text x="368" y="64"  dy="20" font-size="18" fill="#F25C05" font-weight="700" font-family="Noto Sans KR" class="bar-val" data-x="368">중고 노트북</text>
+            <text x="448" y="94"  dy="20" font-size="18" fill="#F25C05" font-weight="700" font-family="Noto Sans KR" class="bar-val" data-x="448">한국어 강의</text>
+            <text x="508" y="144" dy="20" font-size="18" fill="#F25C05" font-weight="700" font-family="Noto Sans KR" class="bar-val" data-x="508">인터넷 카페</text>
+            <text x="548" y="194" dy="20" font-size="18" fill="#F25C05" font-weight="700" font-family="Noto Sans KR" class="bar-val" data-x="548">손녀의 꿈</text>
+            <!-- 화살표 -->
+            <text x="0" y="280" font-size="16" fill="#aaa" font-family="Noto Sans KR">← 희생의 크기</text>
+            <defs>
+              <linearGradient id="barGrad1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#F24405"/>
+                <stop offset="100%" stop-color="#F2C53D"/>
+              </linearGradient>
+              <linearGradient id="barGrad2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#593C47"/>
+                <stop offset="100%" stop-color="#F25C05"/>
+              </linearGradient>
+              <linearGradient id="barGrad3" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#F25C05"/>
+                <stop offset="100%" stop-color="#F2E63D"/>
+              </linearGradient>
+              <linearGradient id="barGrad4" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#F24405"/>
+                <stop offset="100%" stop-color="#593C47"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 도넛 차트: 합격 통계 -->
+      <div class="chart-card reveal" style="transition-delay:.15s">
+        <div class="card-title"><span class="ico">🎯</span> 한국 취업 시험 통계</div>
+        <div class="svg-container">
+          <svg viewBox="0 0 380 300" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;" id="donutChart">
+            <!-- 도넛 -->
+            <g transform="translate(130,150)">
+              <!-- 배경 링 -->
+              <circle cx="0" cy="0" r="90" fill="none" stroke="#f0e8e8" stroke-width="28"/>
+              <!-- 탈락 (불합격) -->
+              <circle cx="0" cy="0" r="90" fill="none" stroke="#FECDD3" stroke-width="28"
+                stroke-dasharray="565 0"
+                stroke-dashoffset="-4"
+                transform="rotate(-90)"/>
+              <!-- 합격 (25/3000 = 0.83%) → 약 4.7도 → dasharray 565*0.0083=4.7 -->
+              <circle cx="0" cy="0" r="90" fill="none" stroke="var(--orange)" stroke-width="28"
+                stroke-dasharray="0 565"
+                stroke-linecap="round"
+                transform="rotate(-90)"
+                id="donutArc"
+                style="transition: stroke-dasharray 1.5s ease;"/>
+              <!-- 중앙 텍스트 -->
+              <text x="0" y="-12" text-anchor="middle" font-size="36" font-weight="900" fill="var(--burg)" font-family="Noto Serif KR">0.83%</text>
+              <text x="0" y="16" text-anchor="middle" font-size="18" fill="var(--slate)" font-family="Noto Sans KR">합격률</text>
+              <text x="0" y="38" text-anchor="middle" font-size="16" fill="var(--orange)" font-family="Noto Sans KR" font-weight="700">여성 단 1명</text>
+            </g>
+            <!-- 범례 -->
+            <rect x="260" y="95"  width="16" height="16" rx="3" fill="var(--orange)"/>
+            <text x="282" y="108" font-size="18" fill="var(--dark)" font-family="Noto Sans KR">합격 25명</text>
+            <rect x="260" y="122" width="16" height="16" rx="3" fill="#FECDD3"/>
+            <text x="282" y="135" font-size="18" fill="var(--slate)" font-family="Noto Sans KR">불합격 2,975명</text>
+            <text x="260" y="180" font-size="16" fill="var(--burg)" font-family="Noto Serif KR" font-weight="700">전체 지원:</text>
+            <text x="260" y="202" font-size="32" fill="var(--burg)" font-family="Noto Serif KR" font-weight="900">3,000명</text>
+            <text x="260" y="230" font-size="16" fill="var(--orange)" font-family="Noto Sans KR" font-weight="700">여성 지원 &lt;100명</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 타임라인 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(242,92,5,.12);">🗓️</div>
+      <h2 class="section-title">니르말라의 연대기</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-year">12살</div>
+        <div class="tl-title">🏅 전교 1등, 상장 박탈</div>
+        <div class="tl-body">전교 1등 수상 단상에 올라갔다가 교장에게 손목을 잡혔다. "돔 카스트가 1등이면 다른 아이들 체면이 뭐냐?" 상장은 2등에게 돌아갔다.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.1s">
+        <div class="tl-year">19살</div>
+        <div class="tl-title">🎓 IIT-JEE 전국 87등 → 입학 취소</div>
+        <div class="tl-body">달리트 여성 역대 최고 성적으로 IIT 델리 컴퓨터 공학과 합격. 그러나 카스트 기재란을 본 직원의 전화 한 통으로 "자리가 없다"는 통보를 받았다.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.2s">
+        <div class="tl-year">19살 + 10일</div>
+        <div class="tl-title">📱 바부지의 새벽 4시 유튜브 영상</div>
+        <div class="tl-body">10일간 방에서 나오지 않던 니르말라. 바부지가 깨진 스마트폰으로 보여 준 영상 — "한국에는 카스트가 없습니다. 코딩을 잘하면 개발자로 대접받는 나라예요."</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.1s">
+        <div class="tl-year">6개월 후</div>
+        <div class="tl-title">🇰🇷 한국 IT 기업 최종 합격 — 여성 1위</div>
+        <div class="tl-body">코딩 테스트 전체 12등, 여성 1위. 바부지는 염소 15마리·할머니 금목걸이·집 담보 대출로 노트북·한국어 강의·인터넷 카페를 마련해줬다.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.2s">
+        <div class="tl-year">1년 후</div>
+        <div class="tl-title">💼 정규직 전환 — 외국인 채용 최초</div>
+        <div class="tl-body">인도 모바일 결제 앱 다운로드 100만 돌파. 코드 리뷰에서 "기존 대비 처리속도 40% 향상" — 팀 기준 코드로 채택.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.1s">
+        <div class="tl-year">3년 후</div>
+        <div class="tl-title">💔 바부지의 별세 — 영상 통화로 마지막 인사</div>
+        <div class="tl-body">달리트 해외취업자 재입국 제한법으로 임종도 지키지 못했다. 바부지의 유서: "넌 돔이 아니라 니르말라다." 한국에서 추모식을 열었고 회사 전원이 참석했다.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.2s">
+        <div class="tl-year">5년 후</div>
+        <div class="tl-title">🛂 영주권 취득</div>
+        <div class="tl-body">시니어 개발자 승진. 석사 수석 졸업. 인도 결제 앱 500만 다운로드 돌파.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.1s">
+        <div class="tl-year">7년 후</div>
+        <div class="tl-title">🏳️ 대한민국 귀화 — 한국 국적 취득</div>
+        <div class="tl-body">귀화 선서: "한국이 저를 인간으로 만들어 줬습니다." 한국 여권을 들고 바라나시 바부지 묘소 앞에 무릎을 꿇었다.</div>
+      </div>
+      <div class="tl-item reveal" style="transition-delay:.2s">
+        <div class="tl-year">현재</div>
+        <div class="tl-title">🌟 니르말라 코드 아카데미 — 100명의 불꽃</div>
+        <div class="tl-body">재단 5년, 100명의 달리트 소녀가 한국에서 새 삶을 시작. 삼성·LG·네이버·카카오 인턴십 연결. 인도 명예 대사 역임.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 인용구 ===== -->
+  <div class="quote-block reveal">
+    <p class="quote-text">
+      "바부지 저 왔어요. 한국 여권 들고요.<br>
+      약속 지켰어요. 한국인 됐어요.<br>
+      바부지가 꿈꾸신 그 사람이 됐어요."
+    </p>
+    <p class="quote-source">— 니르말라, 바라나시 바부지 묘소 앞에서</p>
+  </div>
+
+  <!-- ===== 인도 vs 한국 비교 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(89,60,71,.12);">⚖️</div>
+      <h2 class="section-title">인도 카스트 vs 한국 — 니르말라가 경험한 차이</h2>
+    </div>
+    <div class="card">
+      <table class="compare-table" style="width:100%;">
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>🇮🇳 인도 (카스트 체제)</th>
+            <th>🇰🇷 한국</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>평가 기준</strong></td>
+            <td class="bad">태어난 카스트가 모든 것을 결정</td>
+            <td class="good">오직 실력 (코드·성적)</td>
+          </tr>
+          <tr>
+            <td><strong>전국 87등인데…</strong></td>
+            <td class="bad">대학 입학 취소 ("자리 없음")</td>
+            <td class="good">한국 기업에서 "충분합니다"</td>
+          </tr>
+          <tr>
+            <td><strong>악수·식사</strong></td>
+            <td class="bad">돔이 만진 물건도 기피</td>
+            <td class="good">처음 만난 날 힘 있는 악수로 환대</td>
+          </tr>
+          <tr>
+            <td><strong>공유 공간</strong></td>
+            <td class="bad">대학 도서관 출입 금지</td>
+            <td class="good">사장님과 같은 줄에서 같은 밥</td>
+          </tr>
+          <tr>
+            <td><strong>신분증</strong></td>
+            <td class="bad">카스트 표기 → 차별의 도구</td>
+            <td class="good">이름만 적힌 사원증</td>
+          </tr>
+          <tr>
+            <td><strong>언어 (존댓말)</strong></td>
+            <td class="bad">카스트에 따라 사용 언어가 다름</td>
+            <td class="good">"안녕하세요" — 누구에게나 동일</td>
+          </tr>
+          <tr>
+            <td><strong>신분제 역사</strong></td>
+            <td class="bad">3,000년 카스트 — 여전히 현실</td>
+            <td class="good">갑오개혁으로 폐지, 헌법에 평등 명시</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== 한글과 코드의 유사성 SVG ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(242,196,61,.15);">🔤</div>
+      <h2 class="section-title">한글과 코드 — 같은 구조, 다른 자유</h2>
+    </div>
+    <div class="grid-2col">
+      <div class="card card-glass reveal">
+        <div class="svg-container">
+          <svg viewBox="0 0 500 320" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">
+            <!-- 제목 -->
+            <text x="250" y="35" text-anchor="middle" font-size="22" font-weight="900" fill="var(--burg)" font-family="Noto Serif KR">한글의 논리 구조</text>
+            <!-- 자음 박스들 -->
+            <g transform="translate(30, 65)">
+              <rect width="60" height="56" rx="10" fill="var(--burg)"/>
+              <text x="30" y="38" text-anchor="middle" font-size="34" fill="var(--yellow)" font-family="Noto Serif KR" font-weight="900">ㄱ</text>
+              <text x="30" y="54" text-anchor="middle" font-size="12" fill="rgba(255,255,255,.7)" font-family="Noto Sans KR"></text>
+            </g>
+            <text x="102" y="104" font-size="28" fill="var(--orange)" font-weight="900" font-family="Noto Sans KR">+</text>
+            <g transform="translate(120, 65)">
+              <rect width="60" height="56" rx="10" fill="var(--orange)"/>
+              <text x="30" y="38" text-anchor="middle" font-size="34" fill="white" font-family="Noto Serif KR" font-weight="900">ㅏ</text>
+              <text x="30" y="54" text-anchor="middle" font-size="12" fill="rgba(255,255,255,.7)" font-family="Noto Sans KR"></text>
+            </g>
+            <text x="192" y="104" font-size="28" fill="var(--slate)" font-weight="900" font-family="Noto Sans KR">=</text>
+            <g transform="translate(215, 55)">
+              <rect width="72" height="68" rx="12" fill="var(--gold)" style="animation: pulse 2s ease-in-out infinite;"/>
+              <text x="36" y="48" text-anchor="middle" font-size="42" fill="var(--dark)" font-family="Noto Serif KR" font-weight="900">가</text>
+            </g>
+            <!-- 설명 -->
+            <text x="250" y="160" text-anchor="middle" font-size="18" fill="var(--slate)" font-family="Noto Sans KR">자음 + 모음 = 글자 (조합 규칙)</text>
+            <!-- 구분선 -->
+            <line x1="30" y1="178" x2="470" y2="178" stroke="#e5d5da" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <!-- 코드 비교 -->
+            <text x="250" y="208" text-anchor="middle" font-size="22" font-weight="900" fill="var(--burg)" font-family="Noto Serif KR">코드의 논리 구조</text>
+            <g transform="translate(30, 225)">
+              <rect width="80" height="48" rx="8" fill="#1A0F14"/>
+              <text x="40" y="30" text-anchor="middle" font-size="16" fill="#7EC8E3" font-family="monospace" font-weight="700">변수</text>
+            </g>
+            <text x="123" y="256" font-size="24" fill="var(--orange)" font-weight="900" font-family="Noto Sans KR">+</text>
+            <g transform="translate(140, 225)">
+              <rect width="80" height="48" rx="8" fill="#1A0F14"/>
+              <text x="40" y="30" text-anchor="middle" font-size="16" fill="#98D8A9" font-family="monospace" font-weight="700">함수</text>
+            </g>
+            <text x="233" y="256" font-size="24" fill="var(--slate)" font-weight="900" font-family="Noto Sans KR">=</text>
+            <g transform="translate(255, 218)">
+              <rect width="100" height="56" rx="10" fill="var(--orange)" style="animation: pulse 2.5s ease-in-out infinite .5s;"/>
+              <text x="50" y="26" text-anchor="middle" font-size="16" fill="white" font-family="monospace" font-weight="700">프로그램</text>
+              <text x="50" y="46" text-anchor="middle" font-size="14" fill="rgba(255,255,255,.8)" font-family="Noto Sans KR">완성!</text>
+            </g>
+            <text x="250" y="302" text-anchor="middle" font-size="18" fill="var(--slate)" font-family="Noto Sans KR">작은 단위 조합 → 큰 결과 (동일 원리)</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card reveal" style="transition-delay:.15s; display:flex; flex-direction:column; gap:18px;">
+        <div class="card-title"><span class="ico">💡</span> 니르말라의 발견</div>
+        <p class="card-body">
+          한국어에는 <span class="mark-yellow">카스트에 따른 말이 없었습니다.</span>
+          화장터 할아버지에게도, 대기업 사장에게도
+          똑같이 <strong>"안녕하세요"</strong>라고 할 수 있다는 것이 충격이었습니다.
+        </p>
+        <div style="background:var(--ash); border-radius:12px; padding:16px; border-left: 4px solid var(--orange);">
+          <p style="font-size:clamp(18px,1.5vw,19px); line-height:1.7; color:var(--burg); font-weight:700;">
+            한글 자모 조합 = 프로그래밍 구조
+          </p>
+          <p class="card-body" style="margin-top:8px; color:var(--slate);">
+            ㄱ + ㅏ = 가 (한글)<br>
+            변수 + 함수 = 프로그램 (코드)<br>
+            <span class="mark-orange">둘 다 규칙이 있고, 논리적이며, 누구나 배울 수 있다.</span>
+          </p>
+        </div>
+        <p class="card-body" style="color:var(--slate);">
+          3,000년간 산스크리트 문자가 교육의 장벽이 되어 카스트를 유지하는 도구였다.
+          그러나 누구나 <strong>하루 만에 배울 수 있는 한글</strong>이 그 벽에 구멍을 뚫기 시작했다.
+        </p>
+        <div class="badge accent" style="align-self:flex-start; font-size:15px;">
+          🌱 바라나시 돔 마을에 태블릿 30대 → 아이들이 한글로 숙제를 쓰기 시작
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 여정 네트워크 다이어그램 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(242,92,5,.12);">🌐</div>
+      <h2 class="section-title">불꽃이 퍼지는 방식</h2>
+    </div>
+    <div class="chart-card reveal">
+      <div class="svg-container">
+        <svg viewBox="0 0 700 360" width="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">
+          <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="var(--orange)"/>
+            </marker>
+            <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="var(--gold)"/>
+            </marker>
+          </defs>
+
+          <!-- 중심 노드: 니르말라 -->
+          <circle cx="350" cy="180" r="52" fill="var(--burg)" style="animation: pulse 2.5s ease-in-out infinite;"/>
+          <text x="350" y="174" text-anchor="middle" font-size="18" fill="var(--yellow)" font-family="Noto Serif KR" font-weight="900">니르말라</text>
+          <text x="350" y="196" text-anchor="middle" font-size="15" fill="rgba(255,255,255,.8)" font-family="Noto Sans KR">한국인 이사</text>
+
+          <!-- 연결선들 (애니메이션) -->
+          <line x1="350" y1="128" x2="200" y2="48" stroke="var(--orange)" stroke-width="2.5" marker-end="url(#arrowhead)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 0.5s;"/>
+          <line x1="350" y1="128" x2="500" y2="48" stroke="var(--orange)" stroke-width="2.5" marker-end="url(#arrowhead)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 0.7s;"/>
+          <line x1="298" y1="180" x2="100" y2="180" stroke="var(--gold)" stroke-width="2" marker-end="url(#arrowhead2)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 0.9s;"/>
+          <line x1="402" y1="180" x2="600" y2="180" stroke="var(--gold)" stroke-width="2" marker-end="url(#arrowhead2)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 1.1s;"/>
+          <line x1="350" y1="232" x2="200" y2="320" stroke="var(--orange)" stroke-width="2.5" marker-end="url(#arrowhead)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 1.3s;"/>
+          <line x1="350" y1="232" x2="500" y2="320" stroke="var(--orange)" stroke-width="2.5" marker-end="url(#arrowhead)" stroke-dasharray="1000" style="animation: drawLine 2s ease forwards 1.5s;"/>
+
+          <!-- 주변 노드들 -->
+          <!-- 바부지 -->
+          <circle cx="200" cy="48" r="36" fill="var(--dark)" style="animation:popIn 1s ease forwards .5s; opacity:0;"/>
+          <text x="200" y="42" text-anchor="middle" font-size="16" fill="var(--gold)" font-family="Noto Serif KR" font-weight="700">바부지</text>
+          <text x="200" y="62" text-anchor="middle" font-size="14" fill="rgba(255,255,255,.7)" font-family="Noto Sans KR">60년 사랑</text>
+
+          <!-- 한국어 -->
+          <circle cx="500" cy="48" r="36" fill="var(--orange)" style="animation:popIn 1s ease forwards .7s; opacity:0;"/>
+          <text x="500" y="42" text-anchor="middle" font-size="16" fill="white" font-family="Noto Serif KR" font-weight="700">한글</text>
+          <text x="500" y="62" text-anchor="middle" font-size="14" fill="rgba(255,255,255,.85)" font-family="Noto Sans KR">해방의 문자</text>
+
+          <!-- 한국 가족 -->
+          <circle cx="100" cy="180" r="38" fill="var(--gold)" style="animation:popIn 1s ease forwards .9s; opacity:0;"/>
+          <text x="100" y="174" text-anchor="middle" font-size="15" fill="var(--dark)" font-family="Noto Serif KR" font-weight="700">한국 가족</text>
+          <text x="100" y="194" text-anchor="middle" font-size="13" fill="rgba(30,15,20,.75)" font-family="Noto Sans KR">태식씨 엄마</text>
+
+          <!-- 코딩 -->
+          <circle cx="600" cy="180" r="38" fill="#1A0F14" style="animation:popIn 1s ease forwards 1.1s; opacity:0;"/>
+          <text x="600" y="174" text-anchor="middle" font-size="16" fill="#7EC8E3" font-family="monospace" font-weight="700">코드</text>
+          <text x="600" y="194" text-anchor="middle" font-size="14" fill="rgba(255,255,255,.7)" font-family="Noto Sans KR">증명의 언어</text>
+
+          <!-- 재단 -->
+          <circle cx="200" cy="320" r="40" fill="var(--burg)" style="animation:popIn 1s ease forwards 1.3s; opacity:0;"/>
+          <text x="200" y="314" text-anchor="middle" font-size="14" fill="var(--yellow)" font-family="Noto Serif KR" font-weight="700">코드 아카데미</text>
+          <text x="200" y="334" text-anchor="middle" font-size="13" fill="rgba(255,255,255,.75)" font-family="Noto Sans KR">100명의 불꽃</text>
+
+          <!-- 인도 명예대사 -->
+          <circle cx="500" cy="320" r="40" fill="var(--orange)" style="animation:popIn 1s ease forwards 1.5s; opacity:0;"/>
+          <text x="500" y="314" text-anchor="middle" font-size="14" fill="white" font-family="Noto Serif KR" font-weight="700">인도 명예대사</text>
+          <text x="500" y="334" text-anchor="middle" font-size="13" fill="rgba(255,255,255,.85)" font-family="Noto Sans KR">양국의 다리</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3열: 핵심 메시지 카드 ===== -->
+  <section class="reveal" style="margin-bottom: clamp(24px,4vw,48px);">
+    <div class="section-hd">
+      <div class="section-icon" style="background:rgba(242,230,61,.2);">✨</div>
+      <h2 class="section-title">이 이야기가 전하는 세 가지 메시지</h2>
+    </div>
+    <div class="grid-3col">
+      <div class="card reveal" style="border-top: 5px solid var(--red);">
+        <div class="card-title"><span class="ico">🔥</span> 불꽃은 꺼지지 않는다</div>
+        <p class="card-body">
+          바부지가 60년간 겐지스강 화장터에서 지킨 불꽃.
+          그 불꽃으로 손녀를 키웠고,
+          손녀는 이제 <span class="mark-yellow">100개의 불꽃</span>을 피우고 있다.
+          사랑은 가장 강한 연료다.
+        </p>
+      </div>
+      <div class="card card-burg reveal" style="transition-delay:.1s">
+        <div class="card-title" style="color:var(--yellow);"><span class="ico">🌏</span> 문자가 곧 자유다</div>
+        <p class="card-body" style="color:rgba(255,255,255,.85);">
+          배울 수 없기에 영원히 밑바닥이어야 했던 잔혹한 세상.
+          <strong style="color:var(--yellow);">단 하루 만에 읽고 쓸 수 있는 한글</strong>이
+          3,000년 카스트의 벽에 구멍을 뚫기 시작했다.
+        </p>
+      </div>
+      <div class="card reveal" style="transition-delay:.2s; background: linear-gradient(135deg, var(--gold), var(--orange)); color:#fff;">
+        <div class="card-title"><span class="ico">💻</span> 코드는 카스트를 모른다</div>
+        <p class="card-body" style="color:rgba(255,255,255,.9);">
+          인도에서는 카스트로 구분됐다.
+          한국에서는 언어로 구분될 뻔했다.
+          하지만 <strong>코드는 달랐다.</strong>
+          처리속도 40% 향상 — 그게 니르말라를 증명했다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 헌정사 ===== -->
+  <div class="dedication reveal">
+    <span class="ded-emoji">🕯️</span>
+    <h2 class="ded-title">바부지에게 — 겐지스강의 불꽃</h2>
+    <p class="ded-text">
+      <strong>"할아버지가 항상 같이 있다. 여기에."</strong><br><br>
+      이름도 없는 작은 돌무덤 앞에 빨간 여권을 올려놓은 날,
+      니르말라는 세상에서 가장 무거운 약속을 지켰다.<br><br>
+      <strong>넌 돔이 아니라 니르말라다.</strong><br>
+      깨끗하다는 뜻. 그리고 이제는 — 대한민국 국민.
+    </p>
+  </div>
+
+  <!-- ===== 확산 CTA ===== -->
+  <div class="card reveal" style="margin-bottom: clamp(24px,4vw,48px); text-align:center; background: var(--yellow); border-radius: var(--radius-lg);">
+    <p style="font-family:'Noto Serif KR',serif; font-size:clamp(22px,3vw,30px); font-weight:900; color:var(--burg); margin-bottom:12px;">
+      이 이야기가 마음을 움직이셨다면
+    </p>
+    <p style="font-size:clamp(18px,1.8vw,21px); color:var(--dark); line-height:1.7; max-width:600px; margin:0 auto 16px;">
+      지금 이 페이지를 공유해 주세요.<br>
+      여러분의 공유 한 번이 누군가에게<br>
+      <strong>바부지의 새벽 4시 유튜브 영상</strong>처럼 인생을 바꿀 수 있습니다.
+    </p>
+    <div style="font-size:clamp(18px,1.8vw,22px); color:var(--burg); font-weight:700;">
+      댓글에 <strong style="font-size:1.4em;">세종대왕</strong> 이라고 남겨주세요 🙏
+    </div>
+  </div>
+
+</div><!-- /.page-wrap -->
+
+<!-- ===== 푸터 ===== -->
+<footer class="site-footer">
+  <div class="page-wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">겐지스강의 불꽃 🔥</div>
+        <p class="footer-note">
+          출처: 유튜브 다큐멘터리 — 니르말라의 실화<br>
+          그래픽 레코딩 인포그래픽 | 한국어 편집
+        </p>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start;">
+        <span class="footer-tag">#카스트타파</span>
+        <span class="footer-tag">#한글의힘</span>
+        <span class="footer-tag">#코딩교육</span>
+        <span class="footer-tag">#달리트</span>
+        <span class="footer-tag">#인도한국</span>
+      </div>
+    </div>
+    <p style="font-size:15px; margin-top:20px; opacity:.55; border-top:1px solid rgba(255,255,255,.15); padding-top:16px;">
+      이 인포그래픽은 교육·공유 목적으로 제작되었습니다. 상업적 이용을 금합니다.
+    </p>
+  </div>
+</footer>
+
+<!-- ===== JavaScript ===== -->
+<script>
+/* IntersectionObserver — reveal 애니메이션 */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      const delay = e.target.style.transitionDelay || '0s';
+      e.target.style.transitionDelay = delay;
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* 바 차트 애니메이션 */
+const barChartEl = document.getElementById('barChart');
+const barObs = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    const bars = barChartEl.querySelectorAll('.bar');
+    bars.forEach((bar, i) => {
+      const targetW = parseInt(bar.getAttribute('data-w'));
+      let w = 0;
+      const step = targetW / 40;
+      const delay = i * 150;
+      setTimeout(() => {
+        const timer = setInterval(() => {
+          w = Math.min(w + step, targetW);
+          bar.setAttribute('width', w);
+          if (w >= targetW) clearInterval(timer);
+        }, 16);
+      }, delay);
+    });
+    barObs.unobserve(barChartEl);
+  }
+}, { threshold: 0.3 });
+barObs.observe(barChartEl);
+
+/* 도넛 차트 애니메이션 */
+const donutEl = document.getElementById('donutArc');
+const donutChartEl = document.getElementById('donutChart');
+const donutObs = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    setTimeout(() => {
+      /* 25/3000 = 0.833% of 565 = 4.7 */
+      donutEl.style.strokeDasharray = '4.7 565';
+    }, 300);
+    donutObs.unobserve(donutChartEl);
+  }
+}, { threshold: 0.3 });
+donutObs.observe(donutChartEl);
+</script>
+</body>
+</html>
